@@ -23,6 +23,7 @@ from allenact.ithor_arm.ithor_arm_constants import (
     ROTATE_LEFT,
     PICKUP,
     DONE,
+    CONSTANTLY_MOVING_OBJECTS,
 )
 from allenact.ithor_arm.ithor_arm_environment import ManipulaTHOREnvironment
 from allenact.ithor_arm.ithor_arm_viz import LoggerVisualizer
@@ -204,8 +205,8 @@ class AbstractPickUpDropOffTask(Task[ManipulaTHOREnvironment]):
                 # put back this is not the reason for being slow
                 objects_moved = self.env.get_objects_moved(self.initial_object_metadata)
                 # Unnecessary, this is definitely happening objects_moved.remove(self.task_info['object_id'])
-                source_obj = self.task_info['source_object_id']
-                destination_obj = self.task_info['goal_object_id']
+                source_obj = self.task_info['objectId']
+                destination_obj = self.task_info['countertop_id']
                 if source_obj in objects_moved:
                     objects_moved.remove(source_obj)
                 if destination_obj in objects_moved:
