@@ -204,6 +204,18 @@ class AbstractPickUpDropOffTask(Task[ManipulaTHOREnvironment]):
                 # put back this is not the reason for being slow
                 objects_moved = self.env.get_objects_moved(self.initial_object_metadata)
                 # Unnecessary, this is definitely happening objects_moved.remove(self.task_info['object_id'])
+                source_obj = self.task_info['source_object_id']
+                destination_obj = self.task_info['goal_object_id']
+                if source_obj in objects_moved:
+                    objects_moved.remove(source_obj)
+                if destination_obj in objects_moved:
+                    objects_moved.remove(destination_obj)
+                if self.env.scene_name in CONSTANTLY_MOVING_OBJECTS:
+                    should_be_removed = CONSTANTLY_MOVING_OBJECTS[self.env.scene_name]
+                    for k in should_be_removed:
+                        if k in objects_moved:
+                            objects_moved.remove(k)
+                # Unnecessary, this is definitely happening objects_moved.remove(self.task_info['object_id'])
                 result["metric/average/number_of_unwanted_moved_objects"] = (
                     len(objects_moved) - 1
                 )

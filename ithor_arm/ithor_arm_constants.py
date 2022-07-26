@@ -7,11 +7,12 @@ from allenact_plugins.ithor_plugin.ithor_environment import IThorEnvironment
 # MANIPULATHOR_COMMIT_ID = 'bcc2e62970823667acb5c2a56e809419f1521e52'
 MANIPULATHOR_COMMIT_ID = "a84dd29471ec2201f583de00257d84fac1a03de2"
 
-MOVE_THR = 0.01
+MOVE_THR = 0.02
 ARM_MIN_HEIGHT = 0.450998873
 ARM_MAX_HEIGHT = 1.8009994
 MOVE_ARM_CONSTANT = 0.05
 MOVE_ARM_HEIGHT_CONSTANT = MOVE_ARM_CONSTANT
+CONSTANTLY_MOVING_OBJECTS = {'FloorPlan1':{'Egg|-02.01|+00.81|+01.25', }, 'FloorPlan2':{'Egg|+00.06|+00.97|-00.17', }, 'FloorPlan4':{'Egg|-03.32|+01.31|+02.85', }, 'FloorPlan5':{'Egg|-00.14|+00.78|-01.92', }, 'FloorPlan6':{'Egg|-02.53|+00.60|-00.71', }, 'FloorPlan10':{'Egg|+00.89|+01.16|+01.09', }, 'FloorPlan11':{'Egg|-02.32|+00.80|-01.72', }, 'FloorPlan15':{'Tomato|-02.30|+00.97|+03.69', }, 'FloorPlan16':{'Ladle|+02.61|+01.04|-01.50', }, 'FloorPlan20':{'Vase|+01.50|+00.56|+02.45', }, 'FloorPlan21':{'Lettuce|-00.28|+00.97|+01.13', }, 'FloorPlan22':{'Apple|+00.28|+01.15|+01.58', }, 'FloorPlan23':{'Egg|-00.46|+01.40|-01.01', }, 'FloorPlan24':{'Microwave|-01.53|+01.25|+03.88', }, 'FloorPlan27':{'Ladle|-00.10|+00.95|+02.55', }, 'FloorPlan28':{'Apple|-00.44|+01.00|-01.48', }, 'FloorPlan217':{'Chair|-04.74|+00.01|+04.61', }, 'FloorPlan229':{'Box|-03.42|+00.59|+02.44', }, 'FloorPlan316':{'Pen|+00.14|+00.70|-02.21', 'Pencil|+00.21|+00.70|-02.20', }, 'FloorPlan326':{'BaseballBat|-02.90|+00.06|-02.70', }, 'FloorPlan416':{'ToiletPaper|-01.57|+00.64|+00.05', }, 'FloorPlan418':{'ToiletPaper|-00.37|+00.05|-03.86', }}
 
 ADITIONAL_ARM_ARGS = {
     "disableRendering": True,

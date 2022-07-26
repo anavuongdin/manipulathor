@@ -21,6 +21,7 @@ from allenact.ithor_arm.ithor_arm_constants import (
     MANIPULATHOR_COMMIT_ID,
     reset_environment_and_additional_commands,
     MOVE_THR,
+    CONSTANTLY_MOVING_OBJECTS,
 )
 from allenact.manipulathor_utils.debugger_util import ForkedPdb
 
