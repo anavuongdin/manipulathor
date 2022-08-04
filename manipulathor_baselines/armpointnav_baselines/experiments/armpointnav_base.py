@@ -23,14 +23,19 @@ class ArmPointNavBaseConfig(ExperimentConfig, ABC):
     SCREEN_SIZE = 224
     MAX_STEPS = 200
 
+    DISTURB_PEN = 0.0
+    DISTURB_VIS = True
+
     def __init__(self):
         self.REWARD_CONFIG = {
             "step_penalty": -0.01,
             "goal_success_reward": 10.0,
-            "pickup_success_reward": 10.0,
+            "pickup_success_reward": 5.0,
             "failed_stop_reward": 0.0,
             "shaping_weight": 1.0,  # we are not using this
             "failed_action_penalty": -0.03,
+            "disturb_penalty": self.DISTURB_PEN,  # <=0, negative
+            "disturb_visible": self.DISTURB_VIS,  # if consider the visible objects only
         }
 
     @classmethod

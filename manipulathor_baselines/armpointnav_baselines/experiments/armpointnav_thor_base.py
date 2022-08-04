@@ -3,6 +3,7 @@ from abc import ABC
 from math import ceil
 from typing import Dict, Any, List, Optional, Sequence
 
+import os
 import gym
 import numpy as np
 import torch
@@ -11,24 +12,23 @@ from allenact.base_abstractions.preprocessor import SensorPreprocessorGraph
 from allenact.base_abstractions.sensor import SensorSuite, ExpertActionSensor
 from allenact.base_abstractions.task import TaskSampler
 from allenact.utils.experiment_utils import evenly_distribute_count_into_bins
-
-from allenact.ithor_arm.ithor_arm_constants import ENV_ARGS
-from allenact.ithor_arm.ithor_arm_task_samplers import (
+from allenact_plugins.manipulathor_plugin.manipulathor_constants import ENV_ARGS
+from allenact_plugins.manipulathor_plugin.manipulathor_task_samplers import (
     SimpleArmPointNavGeneralSampler,
 )
-from allenact.ithor_arm.ithor_arm_viz import ImageVisualizer, TestMetricLogger
-from allenact.manipulathor_baselines.armpointnav_baselines.experiments.armpointnav_base import (
+from projects.manipulathor_disturb_free.armpointnav_baselines.experiments.armpointnav_base import (
     ArmPointNavBaseConfig,
 )
+from allenact.utils.system import get_logger
 
 
 class ArmPointNavThorBaseConfig(ArmPointNavBaseConfig, ABC):
     """The base config for all iTHOR PointNav experiments."""
 
     TASK_SAMPLER = SimpleArmPointNavGeneralSampler
-    VISUALIZE = False
-    if platform.system() == "Darwin":
-        VISUALIZE = True
+    VISUALIZERS = []
+
+    THOR_COMMIT_ID: Optional[str] = None
 
     NUM_PROCESSES: Optional[int] = None
     TRAIN_GPU_IDS = list(range(torch.cuda.device_count()))
@@ -55,8 +55,7 @@ class ArmPointNavThorBaseConfig(ArmPointNavBaseConfig, ABC):
         super().__init__()
 
         assert (
-            self.CAMERA_WIDTH == 224
-            and self.CAMERA_HEIGHT == 224
+            self.SCREEN_SIZE == 224
             and self.VISIBILITY_DISTANCE == 1
             and self.STEP_SIZE == 0.25
         )
@@ -112,22 +111,26 @@ class ArmPointNavThorBaseConfig(ArmPointNavBaseConfig, ABC):
             sensor_preprocessor_graph=sensor_preprocessor_graph,
         )
 
-    @classmethod
-    def make_sampler_fn(cls, **kwargs) -> TaskSampler:
+    # @classmethod
+    def make_sampler_fn(self, **kwargs) -> TaskSampler:
         from datetime import datetime
 
-        now = datetime.now()
-        exp_name_w_time = cls.__name__ + "_" + now.strftime("%m_%d_%Y_%H_%M_%S_%f")
-        if cls.VISUALIZE:
-            visualizers = [
-                ImageVisualizer(exp_name=exp_name_w_time),
-                TestMetricLogger(exp_name=exp_name_w_time),
+        now = datetime.now().strftime("%Y_%m_%d_%H_%M_%S_%f")
+        if len(self.VISUALIZERS) > 0:
+            assert self.test_ckpt is not None
+            # print("sampler_fn", self.test_ckpt)
+            exp_folder = os.path.join(
+                *self.test_ckpt.split("/")[:-2],  # experiment folder
+                "vis",
+                self.test_ckpt.split("_")[-1],  # checkpoint step
+                self.tag(),
+                now,
+            )
+            kwargs["visualizers"] = [
+                visualizer(exp_name=exp_folder) for visualizer in self.VISUALIZERS
             ]
-
-            kwargs["visualizers"] = visualizers
-        kwargs["objects"] = cls.OBJECT_TYPES
-        kwargs["exp_name"] = exp_name_w_time
-        return cls.TASK_SAMPLER(**kwargs)
+        kwargs["objects"] = self.OBJECT_TYPES
+        return self.TASK_SAMPLER(**kwargs)
 
     @staticmethod
     def _partition_inds(n: int, num_parts: int):
@@ -154,7 +157,7 @@ class ArmPointNavThorBaseConfig(ArmPointNavBaseConfig, ABC):
         else:
             if len(scenes) % total_processes != 0:
                 print(
-                    "Warning: oversampling some of the scenes to feed all processes."
+                    "Warning: subsampling some of the scenes to feed all processes."
                     " You can avoid this by setting a number of workers divisor of the number of scenes"
                 )
         inds = self._partition_inds(len(scenes), total_processes)
@@ -240,6 +243,7 @@ class ArmPointNavThorBaseConfig(ArmPointNavBaseConfig, ABC):
         )
         res["scene_period"] = self.TEST_SAMPLES_IN_SCENE
         res["sampler_mode"] = "test"
+        res["num_task_per_scene"] = self.NUM_TASK_PER_SCENE
         res["env_args"] = {}
         res["cap_training"] = self.CAP_TRAINING
         res["env_args"].update(self.ENV_ARGS)
