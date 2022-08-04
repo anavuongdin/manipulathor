@@ -23,9 +23,12 @@ pip install -r requirements.txt
 
 # Step 4 - copy libraries to venv
 ## NOTE: may need to modify the destination paths
-cp -R manipulathor_baselines /media/SSD/anvd3/venv/lib/python3.8/site-packages/allenact
-cp -R ithor_arm /media/SSD/anvd3/venv/lib/python3.8/site-packages/allenact
-cp -R manipulathor_utils /media/SSD/anvd3/venv/lib/python3.8/site-packages/allenact
+#cp -R manipulathor_baselines /media/SSD/anvd4/venv/lib/python3.8/site-packages/allenact
+#cp -R ithor_arm /media/SSD/anvd4/venv/lib/python3.8/site-packages/allenact
+#cp -R manipulathor_utils /media/SSD/anvd4/venv/lib/python3.8/site-packages/allenact
+### Before these command lines, create projects.manipulathor_disturb_free
+cp -R manipulathor_baselines/armpointnav_baselines /media/SSD/anvd4/venv/lib/python3.8/site-packages/allenact/projects/manipulathor_disturb_free
+cp -R manipulathor_plugin /media/SSD/anvd4/venv/lib/python3.8/site-packages/allenact_plugins
 
 # Step 5 - fix paths inside files
 sudo env "PATH=$PATH" python /media/SSD/anvd3/manipulathor/scripts/startx.py
@@ -51,5 +54,5 @@ allenact allenact/manipulathor_baselines/armpointnav_baselines/experiments/ithor
 #### RGB-Depth Model
 allenact allenact/manipulathor_baselines/armpointnav_baselines/experiments/ithor/armpointnav_rgbdepth -o test_out -s 1 -t test -c pretrained_models/saved_checkpoints/rgbdepth_armpointnav.pt
 #### Depth Model
-allenact allenact/manipulathor_baselines/armpointnav_baselines/experiments/ithor/armpointnav_depth -o test_out -s 1 -t test -cpretrained_models/saved_checkpoints/depth_armpointnav.pt
+allenact allenact/projects/manipulathor_disturb_free/armpointnav_baselines/experiments/ithor/armpointnav_depth -o test_out -s 1 -t test -cpretrained_models/saved_checkpoints/depth_armpointnav.pt
 
