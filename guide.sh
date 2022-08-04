@@ -29,6 +29,7 @@ pip install -r requirements.txt
 ### Before these command lines, create projects.manipulathor_disturb_free
 cp -R manipulathor_baselines/armpointnav_baselines /media/SSD/anvd4/venv/lib/python3.8/site-packages/allenact/projects/manipulathor_disturb_free
 cp -R manipulathor_plugin /media/SSD/anvd4/venv/lib/python3.8/site-packages/allenact_plugins
+cp -R embodiedai/sensors /media/SSD/anvd4/venv/lib/python3.8/site-packages/allenact/embodiedai
 
 # Step 5 - fix paths inside files
 sudo env "PATH=$PATH" python /media/SSD/anvd3/manipulathor/scripts/startx.py
