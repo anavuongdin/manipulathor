@@ -218,10 +218,10 @@ class AbstractPickUpDropOffTask(Task[ManipulaTHOREnvironment]):
                             objects_moved.remove(k)
                 # Unnecessary, this is definitely happening objects_moved.remove(self.task_info['object_id'])
                 result["metric/average/number_of_unwanted_moved_objects"] = (
-                    len(objects_moved)
+                    len(objects_moved) - 1
                 )
                 result["metric/average/success_wo_disturb"] = (
-                    len(objects_moved) == 0
+                    len(objects_moved) == 1
                 )  # multiply this by the successrate
 
             result["success"] = self._success
